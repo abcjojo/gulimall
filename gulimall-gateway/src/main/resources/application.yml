@@ -1,0 +1,30 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: test_route    # 唯一标识
+          uri: https://www.baidu.com  # 转发之后要请求的地址
+          predicates:           # 断言， 符合当前(下面数组)断言规则时，路由到上面的uri地址
+            - Query=url,baidu
+
+        - id: qq_route
+          uri: https://www.qq.com  # 转发之后要请求的地址
+          predicates:
+            - Query=url,qq
+
+        # product服务 请求转发
+        - id: product
+          uri: lb://gulimall-product
+          predicates:     # 断言  匹配规则
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*), /$\{segment}
+
+      # renren-fast服务 请求转发
+        - id: admin_route
+          uri: lb://renren-fast   # lb 表示负载均衡；  lb://renren-fast  意思是负载均衡到renren-fast这个服务
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*), /renren-fast/$\{segment}   # 将路径中的api替换成renren-fast，其余不变
+

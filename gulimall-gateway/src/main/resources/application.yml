@@ -20,6 +20,14 @@ spring:
           filters:
             - RewritePath=/api(?<segment>/?.*), /$\{segment}
 
+        # 第三方服务
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>/?.*), /$\{segment}
+
       # renren-fast服务 请求转发
         - id: admin_route
           uri: lb://renren-fast   # lb 表示负载均衡；  lb://renren-fast  意思是负载均衡到renren-fast这个服务

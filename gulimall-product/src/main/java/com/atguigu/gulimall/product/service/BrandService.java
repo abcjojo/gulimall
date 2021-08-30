@@ -16,5 +16,7 @@ import com.atguigu.common.utils.PageUtils;
 public interface BrandService extends IService<BrandEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void updateByDetail(BrandEntity brand);
 }
 

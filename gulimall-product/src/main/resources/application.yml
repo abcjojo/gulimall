@@ -26,3 +26,11 @@
 #logging:
 #  level:
 #    com.atguigu.gulimall: debug
+
+#spring:
+#  cloud:
+#    alicloud:
+#      access-key: LTAI5tHaJFZYF6XqH3TSApj9
+#      secret-key: H5NgEE6LLxzkFmdxRCmayv8p2qgJDf
+#      oss:
+#        endpoint: oss-cn-huhehaote.aliyuncs.com

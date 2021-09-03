@@ -15,10 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -37,13 +34,25 @@ public class GulimallProductApplicationTests {
     @Test
     public void test1() {
 
-        List<BrandEntity> list = brandService.list(new QueryWrapper<BrandEntity>().eq("brand_id", 1L));
-        list.forEach(item -> System.out.println(item));
+//        List<BrandEntity> list = brandService.list(new QueryWrapper<BrandEntity>().eq("brand_id", 1L));
+//        list.forEach(item -> System.out.println(item));
 
 //        BrandEntity brandEntity = new BrandEntity();
 //        brandEntity.setBrandId(2L);
 //        brandEntity.setDescript("小米");
 //        brandService.updateById(brandEntity);
+    }
+
+    public static void main(String[] args) {
+        //创建键盘录入
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入你的QQ号码");
+        String qq = sc.nextLine();
+        System.out.println("checkQQ:\t" + checkQQ(qq));
+    }
+    public static boolean checkQQ(String qq){
+        //matches()  告知字符串是否匹配给定的正则表达式
+        return qq.matches("^[1-9][0-9]{4,13}");
     }
 
 }

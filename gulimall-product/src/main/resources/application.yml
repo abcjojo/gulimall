@@ -26,3 +26,24 @@
 #logging:
 #  level:
 #    com.atguigu.gulimall: debug
+
+#
+#apollo.bootstrap.enabled: true
+
+
+#spring.redisson.address: redis://127.0.0.1:6379
+#spring.redisson.password:
+
+
+anti:
+  reptile:
+    manager:
+      enabled: true
+      globalFilterMode: true
+      ip-rule:
+        request-max-size: 5
+        lock-expire: 30
+        ignore-ip: 127.0.0.1
+spring:
+  redisson:
+    address: redis://127.0.0.1:6379

@@ -16,5 +16,10 @@ import com.atguigu.common.utils.PageUtils;
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     *  商品上架
+     */
+    void up(Long spuId);
 }
 

@@ -21,6 +21,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *              b、编写一个自定义的校验器
  *              c、关联自定义的校验器和自定义校验注解
  *
+ *       模板引擎
+ *              1、thymeleaf-starter：关闭缓存
+ *              2、静态资源都放在static文件夹下皆可以按照路径直接访问
+ *              3、页面放在templates下，直接访问
+ *                 SpringBoot访问项目的时候，默认找index
+ *
  *
  */
 @MapperScan("com.atguigu.gulimall.product.dao")

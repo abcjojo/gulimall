@@ -47,3 +47,5 @@ anti:
 spring:
   redisson:
     address: redis://127.0.0.1:6379
+  thymeleaf:
+    cache: false

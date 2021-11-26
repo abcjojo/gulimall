@@ -55,4 +55,31 @@ public class GulimallProductApplicationTests {
         return qq.matches("^[1-9][0-9]{4,13}");
     }
 
+
+    @Test
+    public void a() {
+        Map map = new TreeMap();
+        map.put("b", 11);
+        map.put("c", 113);
+        map.put("a", 112);
+        map.put("B", 110);
+        map.put("e", null);
+        map.put(null, "121");
+        System.out.println("全量map");
+        Set set = map.keySet();
+        set.forEach(e -> System.out.println("  " + e + ":" + map.get(e)));
+
+        System.out.println("去空后---------");
+        set.forEach(e -> {
+            if (null == map.get(e)) {
+                map.remove(e);
+            }
+        });
+
+        Set set1 = map.keySet();
+        set1.forEach(e -> System.out.println("  " + e + ":" + map.get(e)));
+
+
+    }
+
 }

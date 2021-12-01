@@ -117,19 +117,25 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJson() {
+
+        /**
+         * 循环查询优化为一次查询
+         */
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
+
         // 1、查出所有1级分类
-        List<CategoryEntity> level1Categorys = getLevel1Categorys();
+        List<CategoryEntity> level1Categorys = getParentCid(selectList, 0L);
 
         // 封装数据
         Map<String, List<Catalog2Vo>> parent_cid = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
-            List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+            List<CategoryEntity> categoryEntities = getParentCid(selectList, v.getCatId());
             List<Catalog2Vo> catalog2Vos = null;
             if (categoryEntities != null) {
                 catalog2Vos = categoryEntities.stream().map(item -> {
                     Catalog2Vo catalog2Vo = new Catalog2Vo(v.getCatId().toString(), null, item.getCatId().toString(), item.getName());
 
                     // 找到当前二级分类的三级分类封装成VO
-                    List<CategoryEntity> level3Catalog = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", item.getCatId()));
+                    List<CategoryEntity> level3Catalog = getParentCid(selectList, item.getCatId());
                     if (level3Catalog != null) {
                         List<Catalog2Vo.Catalog3Vo> collect = level3Catalog.stream().map(l3 -> {
                             Catalog2Vo.Catalog3Vo catalog3Vo = new Catalog2Vo.Catalog3Vo(item.getCatId().toString(), l3.getName(), l3.getCatId().toString());
@@ -144,6 +150,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }));
 
         return parent_cid;
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList, Long parent_cid) {
+//        return baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+        return selectList.stream().filter(e -> e.getParentCid().equals(parent_cid)).collect(Collectors.toList());
     }
 
     // 递归查找parentId

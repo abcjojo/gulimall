@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,6 +31,15 @@ public class GulimallProductApplicationTests {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Test
+    public void redisson() {
+        System.out.println(redissonClient);
+    }
+
 
     @Test
     public void test1() {

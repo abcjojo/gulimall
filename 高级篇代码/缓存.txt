@@ -1,0 +1,30 @@
+ 缓存的使用：
+    条件： 1、即时性、数据一致性要求不高的数据（要求达到最终一致性，不要求强一致性的数据）
+          2、访问量大且更新频率不高的数据（读多写少）
+
+ redis的整合：
+    1、引入data-redis-starter
+    2、简单配置redis的host、port等信息
+    3、使用SpringBoot的自动配置好的StringRedisTemplate和RedisTemplate来操作redis
+
+ redis做缓存的数据一致性问题： 当mysql的数据被修改时，造成redis的数据和mysql数据不一致问题
+    解决方案：1、双写模式：当mysql数据被修改时，redis数据也修改
+            2、失效模式：当mysql数据被修改时，删除redis中的数据，等待下次查询过来直接将数据缓存到redis
+       注意：并发环境中容易出现多个线程对数据操作时序错乱的问题，加读写锁可以避免，但是对性能有一定影响。写操作过多的数据不应当放在缓存中，加锁也会极大的消耗系统性能。
+
+ 系统的一致性解决方案： 使用失效模式
+    1、缓存的所有数据加上过期时间，数据过期下一次查询触发主动更新
+    2、读写数据的时候，加上分布式的读写锁
+
+ 整合SpringCache简化缓存开发
+    1、引入依赖
+        spring-boot-starter-cache
+    2、写配置
+        a、CacheAutoConfiguration 会导入 RedisCacheConfiguration
+        b、自动配置好了RedisCacheManager
+    3、配置使用redis作为缓存
+    @Cacheable: 触发将数据保存到缓存
+    @CacheEvict：触发将数据从缓存的删除的操作
+    @CachePut：不影响方法执行更新缓存
+    @Caching：组合以上多个操作
+    @CacheConfig：再类级别共享缓存的相同配置

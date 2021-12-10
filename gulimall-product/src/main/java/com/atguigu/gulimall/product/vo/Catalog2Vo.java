@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Catalog2Vo {
+public class Catalog2Vo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String catalog1Id;
     private List<Catalog3Vo> catalog3List;

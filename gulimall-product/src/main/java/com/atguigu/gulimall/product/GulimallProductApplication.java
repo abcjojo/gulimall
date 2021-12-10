@@ -4,6 +4,7 @@ package com.atguigu.gulimall.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -27,6 +28,15 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *              2、静态资源都放在static文件夹下皆可以按照路径直接访问
  *              3、页面放在templates下，直接访问
  *                 SpringBoot访问项目的时候，默认找index
+ *
+ *       整合redis：
+ *              1、引入data-redis-starter
+ *              2、简单配置redis端口号、主机地址等信息
+ *              3、使用Spring-boot自动配置好的StringRedisTemplate来操作redis
+ *
+ *       整合redisson作为分布式锁等功能框架
+ *              1、引入redisson依赖
+ *              2、
  *
  *
  */

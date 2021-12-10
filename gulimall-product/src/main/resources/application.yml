@@ -34,19 +34,21 @@
 #spring.redisson.address: redis://127.0.0.1:6379
 #spring.redisson.password:
 
+# 防爬策略配置
+#anti:
+#  reptile:
+#    manager:
+#      enabled: true
+#      globalFilterMode: true
+#      ip-rule:
+#        request-max-size: 5
+#        lock-expire: 30
+#        ignore-ip: 127.0.0.1
 
-anti:
-  reptile:
-    manager:
-      enabled: true
-      globalFilterMode: true
-      ip-rule:
-        request-max-size: 5
-        lock-expire: 30
-        ignore-ip: 127.0.0.1
+
 spring:
   redisson:
-    address: redis://127.0.0.1:6379
+    address: redis://192.168.21.130:6379
   thymeleaf:
     cache: false
 

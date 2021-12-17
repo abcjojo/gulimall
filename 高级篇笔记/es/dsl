@@ -2434,3 +2434,395 @@ POST /_bulk
 
 GET users/_search
 GET bank/_search
+
+
+# 删除myindex
+DELETE my_index
+
+PUT my_index/_doc/1
+{
+  "group":"fans",
+  "user":[
+    {
+      "first":"John",
+      "last":"Smith"
+    },
+    {
+      "first":"Alice",
+      "last":"White"
+    }
+    ]
+}
+
+GET my_index/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "user.first": "Alice"
+          }
+        },
+        {
+          "match": {
+            "user.last": "Smith"
+          }
+        }
+      ]
+    }
+  }
+}
+
+# 查看my_index的映射
+GET my_index/_mapping
+
+# 使用嵌入式对象
+PUT my_index
+{
+  "mappings": {
+    "properties": {
+      "user":{
+        "type": "nested"
+      }
+    }
+  }
+}
+
+
+
+PUT product
+{
+  "mappings": {
+    "properties": {
+      "skuId": { "type": "long" },
+      "spuId": { "type": "keyword" },
+      "skuTitle": {
+        "type": "text",
+        "analyzer": "ik_smart"
+      },
+      "skuPrice": { "type": "keyword" },
+      "skuImg": {
+        "type": "keyword",
+        "index": false,
+        "doc_values": false
+      },
+      "saleCount":{ "type":"long" },
+      "hasStock": { "type": "boolean" },
+      "hotScore": { "type": "long"  },
+      "brandId":  { "type": "long" },
+      "catalogId": { "type": "long"  },
+      "brandName": {
+        "type": "keyword",
+        "index": false,
+        "doc_values": false
+      },
+      "brandImg":{
+        "type": "keyword",
+        "index": false,
+        "doc_values": false
+      },
+      "catalogName": {
+        "type": "keyword",
+        "index": false,
+        "doc_values": false
+      },
+      "attrs": {
+        "type": "nested",
+        "properties": {
+          "attrId": {"type": "long"  },
+          "attrName": {
+            "type": "keyword",
+            "index": false,
+            "doc_values": false
+          },
+          "attrValue": { "type": "keyword" }
+        }
+      }
+    }
+  }
+}
+
+
+GET product/_search
+
+# 查看所有index信息
+GET /_cat/indices?v
+
+# 模糊匹配 过滤（按照属性，分类，品牌，价格区间，库存），排序，分页，高亮
+GET product/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "skuTitle": "华为"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": {
+            "catalogId": "225"
+          }
+        },
+        {
+          "nested": {
+            "path": "attrs",
+            "query": {
+              "bool": {
+                "must": [
+                  {
+                    "term": {
+                      "attrs.attrId": {
+                        "value": "15"
+                      }
+                    }
+                  },
+                  {
+                    "terms": {
+                      "attrs.attrValue": [
+                        "海思（Hisilicon）",
+                        "以官网信息为准"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "terms": {
+            "brandId": [
+              "1",
+              "2",
+              "9"
+            ]
+          }
+        },
+        {
+          "term" :{
+            "hasStock": {
+              "value":"true"
+            }
+          }
+        },
+         {
+              "range": {
+                "skuPrice": {
+                  "gte": 0,
+                  "lte": 6000
+                }
+              }
+            }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "skuPrice": {
+        "order": "desc"
+      }
+    }
+  ],
+  "from": 0,
+  "size": 20,
+  "highlight": {
+    "fields": {"skuTitle": {}},
+    "pre_tags": "<b style='color:red'>",
+    "post_tags": "</b>"
+  }
+}
+
+# 聚合分析
+# 如果是嵌入式的属性（attr），查询、聚合、分析都应该是嵌入式的
+GET gulimall_product/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "brand_agg": {
+      "terms": {
+        "field": "brandId",
+        "size": 10
+      },
+      "aggs": {
+        "brand_name_agg": {
+          "terms": {
+            "field": "brandName",
+            "size": 10
+          }
+        },
+        "brand_img_agg":{
+          "terms": {
+            "field": "brandImg",
+            "size": 10
+          }
+        }
+      }
+    },
+    "catalog_agg":{
+      "terms": {
+        "field": "catalogId",
+        "size": 10
+      },
+      "aggs": {
+        "catalog_name_agg": {
+          "terms": {
+            "field": "catalogName",
+            "size": 10
+          }
+        }
+      }
+    },
+    "attr_agg":{
+      "nested": {
+        "path": "attrs"
+      },
+      "aggs": {
+        "attr_id_agg": {
+          "terms": {
+            "field": "attrs.attrId",
+            "size": 10
+          },
+          "aggs": {
+            "attr_name_agg": {
+              "terms": {
+                "field": "attrs.attrName",
+                "size": 10
+              }
+            },
+            "attr_value_agg":{
+              "terms": {
+                "field": "attrs.attrValue",
+                "size": 10
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# 查看映射
+GET product/_mapping
+
+# 不能修改映射，映射修改操作为重新建index，然后数据迁移
+PUT gulimall_product
+{
+  "mappings": {
+    "properties": {
+      "attrs": {
+        "type": "nested",
+        "properties": {
+          "attrId": {
+            "type": "long"
+          },
+          "attrName": {
+            "type": "keyword"
+          },
+          "attrValue": {
+            "type": "keyword"
+          }
+        }
+      },
+      "brandId": {
+        "type": "long"
+      },
+      "brandImg": {
+        "type": "keyword"
+      },
+      "brandName": {
+        "type": "keyword"
+      },
+      "catalogId": {
+        "type": "long"
+      },
+      "catalogName": {
+        "type": "keyword"
+      },
+      "hasStock": {
+        "type": "boolean"
+      },
+      "hotScore": {
+        "type": "long"
+      },
+      "saleCount": {
+        "type": "long"
+      },
+      "skuId": {
+        "type": "long"
+      },
+      "skuImg": {
+        "type": "keyword"
+      },
+      "skuPrice": {
+        "type": "keyword"
+      },
+      "skuTitle": {
+        "type": "text",
+        "analyzer": "ik_smart"
+      },
+      "spuId": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+#
+GET gulimall_product/_search
+
+# 迁移数据
+POST _reindex
+{
+  "source": {
+    "index": "product"
+  },
+  "dest": {
+    "index": "gulimall_product"
+  }
+}
+
+GET /_search
+{
+  "query": {
+    "nested": {
+      "path": "attrs",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "attrs.attrId": {
+                  "value": "15"
+                }
+              }
+            },
+            {
+              "terms": {
+                "attrs.attrValue": [
+                  "海思（Hisilicon）",
+                  "以官网信息为准"
+                ]
+              }
+            },
+            {
+              "range": {
+                "skuPrice": {
+                  "gte": 0,
+                  "lte": 6000
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+

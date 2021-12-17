@@ -44,5 +44,6 @@ public interface CategoryService extends IService<CategoryEntity> {
 
     Map<String, List<Catalog2Vo>> getCatalogJson();
 
+    Long[] findCatalogPath(Long catelogId);
 }
 

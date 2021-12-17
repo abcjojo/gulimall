@@ -41,7 +41,13 @@ spring:
         - id: gulimall_host_route
           uri: lb://gulimall-product
           predicates:
-            - Host=**.gulimall.com,gulimall.com
+            - Host=gulimall.com
+
+        # 检索
+        - id: gulimall_search_route
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com
 
 # 目前（p140） 商城系统无论是页面还是接口的请求，都可以使用 gulimall.com ； Nginx监听gulimall.com 然后会将请求直接代理给88端口号的网关
 #               然后网关会根据请求路径判断： 如果是 /api/** 的请求会负载均衡到对应的服务器，如果满足域名，转交给对应的服务

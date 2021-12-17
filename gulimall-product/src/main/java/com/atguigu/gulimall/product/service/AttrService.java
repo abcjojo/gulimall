@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
+import com.atguigu.gulimall.product.vo.AttrRespVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.atguigu.gulimall.product.entity.AttrEntity;
 
@@ -25,5 +26,7 @@ public interface AttrService extends IService<AttrEntity> {
      * @return
      */
     List<Long> selectSearchAttrIds(List<Long> attrIds);
+
+    AttrRespVo getAttrInfo(Long attrId);
 }
 

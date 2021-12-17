@@ -4,6 +4,7 @@ import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -48,6 +49,14 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
 
         }
 
+    }
+
+
+    @Override
+    public List<BrandEntity> getBrandsByIds(List<Long> brandIds) {
+
+        List<BrandEntity> list = baseMapper.selectList(new QueryWrapper<BrandEntity>().in("brand_id", brandIds));
+        return list;
     }
 
 }

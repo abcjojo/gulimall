@@ -193,6 +193,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return parent_cid;
     }
 
+    @Override
+    public Long[] findCatalogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+
+        Collections.reverse(parentPath);
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
     /**
      * TODO 产生堆外内存溢出 OutOfDirectMemoryError
      * 1、springboot2.0之后默认使用lettuce作为操作redis的客户端，他使用netty进行网络通信

@@ -5,6 +5,7 @@ import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.BrandService;
 import com.atguigu.gulimall.product.service.CategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,26 @@ public class GulimallProductApplicationTests {
         System.out.println(redissonClient);
     }
 
+
+    @Test
+    public void test2() {
+        Object o = new Object();
+        HashMap<Demo, String> hashMap = new HashMap<>();
+        Demo a = new Demo("A");
+        Demo b = new Demo("A");
+        hashMap.put(a, "hello");
+        String s = hashMap.get(b);
+        System.out.println(s);
+    }
+
+@EqualsAndHashCode
+    static class Demo {
+        String key;
+
+        Demo(String key) {
+            this.key = key;
+        }
+    }
 
     @Test
     public void test1() {

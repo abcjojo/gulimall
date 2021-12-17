@@ -29,6 +29,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -37,6 +40,23 @@ public class GulimallSearchApplicationTests {
     @Autowired
     private RestHighLevelClient client;
 
+    @Test
+    public void test2() {
+        String[] str = {"100_500","_500","100_","_",""};
+        List<String> list = new ArrayList<>(Arrays.asList(str));
+        System.out.println(list);
+
+        list.stream().forEach(e->{
+            System.out.println("-------------------------");
+            System.out.println(e);
+            String[] split = e.split("_");
+            ArrayList<String> splitList = new ArrayList<>(Arrays.asList(split));
+            System.out.println(split.length);
+            System.out.println(splitList.size());
+            System.out.println(splitList);
+            System.out.println("-------------------------");
+        });
+    }
 
     @Data
     static class Account {
